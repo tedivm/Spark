@@ -2,7 +2,8 @@
 # PHP Project Template
 
 It seems like modern php projects have a lot of duplicated needs- test suite configuration, licenses, continuous
-integration setup, etc etc. This project is a basic template
+integration setup, etc etc. This project is a basic template for all of that with some sane defaults and placeholders
+for where things like the project name.
 
 
 # PROJECTNAME [![Build Status](https://travis-ci.org/tedivm/PROJECTNAME.png?branch=master)](https://travis-ci.org/tedivm/PROJECTNAME)
