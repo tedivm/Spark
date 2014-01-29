@@ -8,7 +8,8 @@
  * file that was distributed with this source code.
  */
 
-define('TESTING', true);//
+define('TESTING', true);
+define('TESTING_DIRECTORY', __DIR__);
 error_reporting(-1);
 
 date_default_timezone_set('UTC');
