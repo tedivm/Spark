@@ -17,7 +17,9 @@ This should break the json and prevent anything from being used until updated.
         "php": ">=5.3.0"
     },
     "require-dev": {
-        "fabpot/php-cs-fixer": "0.4.0"
+        "phpunit/phpunit": "4.0.*",
+        "fabpot/php-cs-fixer": "0.4.0",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
         "psr-0": {"PROJECTNAME": "src/"}
