@@ -10,6 +10,7 @@ for where things like the project name.
 
 [![Latest Stable Version](https://poser.pugx.org/tedivm/PROJECTNAME/v/stable.png)](https://packagist.org/packages/tedivm/PROJECTNAME)
 [![Total Downloads](https://poser.pugx.org/tedivm/PROJECTNAME/downloads.png)](https://packagist.org/packages/tedivm/PROJECTNAME)
+[![Coverage Status](https://coveralls.io/repos/tedivm/PROJECTNAME/badge.png?branch=master)](https://coveralls.io/r/tedivm/PROJECTNAME?branch=master)
 
 ## Installing
 
