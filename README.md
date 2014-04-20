@@ -6,11 +6,13 @@ integration setup, etc etc. This project is a basic template for all of that wit
 for where things like the project name.
 
 
-# PROJECTNAME [![Build Status](https://travis-ci.org/tedivm/PROJECTNAME.png?branch=master)](https://travis-ci.org/tedivm/PROJECTNAME)
+# PROJECTNAME [![Build Status](https://travis-ci.org/tedivm/PROJECTNAME.svg?branch=master)](https://travis-ci.org/tedivm/PROJECTNAME)
 
-[![Latest Stable Version](https://poser.pugx.org/tedivm/PROJECTNAME/v/stable.png)](https://packagist.org/packages/tedivm/PROJECTNAME)
+[![License](http://img.shields.io/packagist/l/tedivm/PROJECTNAME.svg)](https://github.com/tedivm/PROJECTNAME/blob/master/LICENSE)
+[![Latest Stable Version](http://img.shields.io/github/release/tedivm/PROJECTNAME.svg)](https://packagist.org/packages/tedivm/PROJECTNAME)
+[![Coverage Status](http://img.shields.io/coveralls/tedivm/PROJECTNAME.svg)](https://coveralls.io/r/tedivm/PROJECTNAME?branch=master)
 [![Total Downloads](https://poser.pugx.org/tedivm/PROJECTNAME/downloads.png)](https://packagist.org/packages/tedivm/PROJECTNAME)
-[![Coverage Status](https://coveralls.io/repos/tedivm/PROJECTNAME/badge.png?branch=master)](https://coveralls.io/r/tedivm/PROJECTNAME?branch=master)
+
 
 ## Installing
 
