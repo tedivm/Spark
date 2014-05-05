@@ -11,7 +11,7 @@ for where things like the project name.
 [![License](http://img.shields.io/packagist/l/tedivm/PROJECTNAME.svg)](https://github.com/tedivm/PROJECTNAME/blob/master/LICENSE)
 [![Latest Stable Version](http://img.shields.io/github/release/tedivm/PROJECTNAME.svg)](https://packagist.org/packages/tedivm/PROJECTNAME)
 [![Coverage Status](http://img.shields.io/coveralls/tedivm/PROJECTNAME.svg)](https://coveralls.io/r/tedivm/PROJECTNAME?branch=master)
-[![Total Downloads](https://poser.pugx.org/tedivm/PROJECTNAME/downloads.png)](https://packagist.org/packages/tedivm/PROJECTNAME)
+[![Total Downloads](http://img.shields.io/packagist/dt/tedivm/PROJECTNAME.svg)](https://packagist.org/packages/tedivm/PROJECTNAME)
 
 
 ## Installing
