@@ -43,12 +43,12 @@ First install dependencies using Composer. It's important to include the dev pac
 
 The "runTests.sh" script runs the full test suite- phpunit, php-cs-fixer, as well as any environmental setup:
 
-    tests/runTests.sh
+    ./tests/runTests.sh
 
 To call phpunit directly:
 
-    vendor/bin/phpunit
+    ./vendor/bin/phpunit
 
-To call php-cs-fixer directly:
+To call php-cs-fixer directly to fix any code style issues automatically:
 
-    vendor/bin/php-cs-fixer fix ./ --level="all" -vv --dry-run
+    ./vendor/bin/php-cs-fixer fix ./ --level="all" -vv --dry-run
