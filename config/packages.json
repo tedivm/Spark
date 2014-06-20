@@ -1,0 +1,9 @@
+{
+    "general":[
+        "general"
+    ],
+    "cli":[
+        "general",
+        "cli"
+    ]
+}

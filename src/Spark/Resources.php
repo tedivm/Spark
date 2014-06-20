@@ -6,7 +6,7 @@ namespace Spark;
 class Resources
 {
     protected $base;
-    protected $types = array('templates' => 'templates/');
+    protected $types = array('templates' => 'templates/', 'config' => 'config/');
 
     public function __construct()
     {
