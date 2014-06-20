@@ -15,8 +15,6 @@ class Create extends Base {
     protected $help = <<<EOT
 EOT;
 
-    protected $types = array('general');
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $input = $this->getInput($input);
@@ -40,10 +38,6 @@ EOT;
         $name = $input->getArgument('name');
         $type = $input->getArgument('type');
 
-        if(!in_array($type, $this->types)) {
-            throw new \RuntimeException('Not a supported type.');
-        }
-
         if($input->getOption('dir')) {
             $dir = $input->getOption('dir');
         }else{
@@ -54,9 +48,11 @@ EOT;
         $configPath = $resources->getPath('config');
         $templatePath = $resources->getPath('templates');
 
-
         $packages = json_decode(file_get_contents($configPath . 'packages.json'), true);
 
+        if(!isset($packages[$type])) {
+            throw new \RuntimeException('Not a supported type.');
+        }
 
         $options['name'] = $name;
         $options['type'] = $type;
