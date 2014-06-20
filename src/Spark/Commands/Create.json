@@ -1,0 +1,23 @@
+{
+    "options":[
+        {
+            "name":"dir",
+            "shortcut":"d",
+            "input":true,
+            "description":"Directory the project will be created in.",
+            "default":null
+        }
+    ],
+    "arguments":[
+        {
+            "name":"name",
+            "required":true,
+            "description":"The name of the project."
+        },
+        {
+            "name":"type",
+            "description":"What type of project is being built.",
+            "default":"general"
+        }
+    ]
+}

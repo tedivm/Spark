@@ -3,7 +3,7 @@
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="Spark Test Suite">
-            <directory suffix="Test.php">./tests/PharOut/</directory>
+            <directory suffix="Test.php">./tests/Spark/</directory>
         </testsuite>
     </testsuites>
     <filter>

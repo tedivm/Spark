@@ -3,6 +3,8 @@
 namespace Spark\Commands;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 abstract class Base extends Command {
 
@@ -22,7 +24,7 @@ abstract class Base extends Command {
 
         $metaPath = __DIR__ . '/' . $classname . '.json';
         if(file_exists($metaPath)) {
-            $this->metaDoc = json_decode($metaPath);
+            $this->metaDoc = json_decode(file_get_contents($metaPath), true);
         }
 
         $commandName = isset($this->namespace) ? $this->namespace . ':' : '';
@@ -62,9 +64,21 @@ abstract class Base extends Command {
 
         if(is_array($this->metaDoc) && isset($this->metaDoc['arguments'])) {
             foreach($this->metaDoc['arguments'] as $metaArgument) {
+
+                if(isset($metaArgument['required']) && $metaArgument['required'] === true) {
+                    $mode = InputArgument::REQUIRED;
+
+                } else {
+                    $mode = InputArgument::OPTIONAL;
+                }
+
+                if(isset($metaArgument['array']) && $metaArgument['array'] === true) {
+                    $mode = $mode | InputArgument::IS_ARRAY;
+                }
+
                 $arguments[] = array(
                     $metaArgument['name'], // name
-                    isset($metaArgument['mode']) ? $metaArgument['mode'] : null, // mode
+                    $mode, // mode
                     isset($metaArgument['description']) ? $metaArgument['description'] : '', // description
                     isset($metaArgument['default']) ? $metaArgument['default'] : null // default
                 );
@@ -80,10 +94,30 @@ abstract class Base extends Command {
 
         if(is_array($this->metaDoc) && isset($this->metaDoc['options'])) {
             foreach($this->metaDoc['options'] as $metaOption) {
+
+                // See if it allows input
+                if(isset($metaOption['input']) && $metaOption['input'] === true) {
+
+                    // Defaults to optional if not set.
+                    if(isset($metaOption['required']) && $metaOption['required'] === true) {
+                        $mode = InputOption::VALUE_REQUIRED;
+                    } else {
+                        $mode = InputOption::VALUE_OPTIONAL;
+                    }
+
+                    // Defaults to single value
+                    if(isset($metaOption['array']) && $metaOption['array'] === true) {
+                        $mode = $mode | InputOption::VALUE_IS_ARRAY;
+                    }
+
+                } else {
+                    $mode = InputOption::VALUE_NONE;
+                }
+
                 $options[] = array(
                     $metaOption['name'], // name
                     isset($metaOption['shortcut']) ? $metaOption['shortcut'] : null, // mode
-                    isset($metaOption['mode']) ? $metaOption['mode'] : null, // mode
+                    $mode, // mode
                     isset($metaOption['description']) ? $metaOption['description'] : '', // description
                     isset($metaOption['default']) ? $metaOption['default'] : null // default
                 );
