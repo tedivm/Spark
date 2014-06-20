@@ -2,8 +2,8 @@
 
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="PROJECTNAME Test Suite">
-            <directory suffix="Test.php">./tests/PROJECTNAME/</directory>
+        <testsuite name="{{ name }} Test Suite">
+            <directory suffix="Test.php">./tests/{{ name }}/</directory>
         </testsuite>
     </testsuites>
     <filter>

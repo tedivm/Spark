@@ -1,10 +1,10 @@
 This should break the json and prevent anything from being used until updated.
 
 {
-    "name": "",
+    "name": "{{ name }}",
     "description": "",
     "keywords": ["",""],
-    "homepage": "http://github.com/tedivm/PROJECTNAME",
+    "homepage": "http://github.com/tedivm/{{ name }}",
     "type": "library",
     "license": "MIT",
     "authors": [
