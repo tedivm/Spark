@@ -19,6 +19,24 @@ EOT;
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $input = $this->getInput($input);
+        $name = $input['name'];
+        $type = $input['type'];
+        $dir = $input['dir'];
+        $plugins = $input['plugins'];
+        $configPath = $input['configPath'];
+        $templatePath = $input['templatePath'];
+        $templateFiles = $this->getTemplateFiles($name, $plugins, $templatePath);
+
+        $tags = array('name' => $name);
+        $this->makeDirectories($dir, $templateFiles['directories']);
+        $this->makeFiles($dir, $templateFiles['paths'], $templateFiles['files'], $tags);
+
+        $output->writeln($name . ' has been created using the ' . $type . ' package.');
+    }
+
+    protected function getInput(InputInterface $input)
+    {
         $name = $input->getArgument('name');
         $type = $input->getArgument('type');
 
@@ -36,42 +54,17 @@ EOT;
         $configPath = $resources->getPath('config');
         $templatePath = $resources->getPath('templates');
 
+
         $packages = json_decode(file_get_contents($configPath . 'packages.json'), true);
 
-        $paths = array();
-        $files = array();
-        $directories = array();
-        $plugins = $packages[$type];
 
-        foreach($plugins as $plugin) {
-            $path = $templatePath . $plugin;
-            $paths[] = $path;
-            $pathLen = strlen($path);
-
-            $finder = new Finder();
-            $finder->in($path);
-
-            foreach ($finder as $file) {
-                $longPath = $file->getRealpath();
-                $processedPath = str_replace('PROJECTNAME', $name, $longPath);
-                $shortPath = substr($processedPath, $pathLen + 1);
-                if($file->isDir()) {
-                    $directories[] = $shortPath;
-                } else {
-                    $files[] = $shortPath;
-                }
-            }
-        }
-
-
-        $tags = array('name' => $name);
-
-        $this->makeDirectories($dir, $directories);
-        $this->makeFiles($dir, $paths, $files, $tags);
-
-
-
-        $output->writeln($name . ' has been created using the ' . $type . ' package.');
+        $options['name'] = $name;
+        $options['type'] = $type;
+        $options['dir'] = $dir;
+        $options['plugins'] = $packages[$type];
+        $options['configPath'] = $configPath;
+        $options['templatePath'] = $templatePath;
+        return $options;
     }
 
     protected function makeDirectories($base, $directories)
@@ -104,7 +97,33 @@ EOT;
 
     }
 
+    protected function getTemplateFiles($name, $plugins, $templatePath)
+    {
+        $paths = array();
+        $files = array();
+        $directories = array();
 
+        foreach($plugins as $plugin) {
+            $path = $templatePath . $plugin;
+            $paths[] = $path;
+            $pathLen = strlen($path);
+
+            $finder = new Finder();
+            $finder->in($path);
+
+            foreach ($finder as $file) {
+                $longPath = $file->getRealpath();
+                $processedPath = str_replace('PROJECTNAME', $name, $longPath);
+                $shortPath = substr($processedPath, $pathLen + 1);
+                if($file->isDir()) {
+                    $directories[] = $shortPath;
+                } else {
+                    $files[] = $shortPath;
+                }
+            }
+        }
+        return array('directories' => $directories, 'files' => $files, 'paths' => $paths);
+    }
 
 
 }
