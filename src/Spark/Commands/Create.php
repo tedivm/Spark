@@ -79,7 +79,7 @@ EOT;
 
     protected function makeFiles($base, $paths, $files, $tags)
     {
-        $twigFilesystem = new \Twig_Loader_Filesystem($paths);
+        $twigFilesystem = new \Twig_Loader_Filesystem(array_reverse($paths));
         $twigEnvironment = new \Twig_Environment($twigFilesystem);
 
         foreach($files as $file) {
@@ -105,7 +105,7 @@ EOT;
             $pathLen = strlen($path);
 
             $finder = new Finder();
-            $finder->in($path);
+            $finder->in($path)->ignoreVCS(false)->notName('.gitkeep')->ignoreDotFiles(false);
 
             foreach ($finder as $file) {
                 $longPath = $file->getRealpath();
