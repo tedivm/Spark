@@ -1,16 +1,13 @@
-This should break the json and prevent anything from being used until updated.
-
 {
-    "name": "{{ name }}",
+    "name": "{{ vendor|lower }}/{{ name|lower }}",
     "description": "",
     "keywords": ["",""],
-    "homepage": "http://github.com/tedivm/{{ name }}",
+    "homepage": "http://github.com/{{ vendor }}/{{ name }}",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "Robert Hafner",
-            "email": "tedivm@tedivm.com"
+        {{ authors }}
         }
     ],
     "require": {
@@ -22,6 +19,6 @@ This should break the json and prevent anything from being used until updated.
         "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
-        "psr-0": {"PROJECTNAME": "src/"}
+        "psr-0": {"{{ name }}": "src/"}
     }
 }
