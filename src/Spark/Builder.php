@@ -62,10 +62,16 @@ class Builder
 
     protected function getTemplateFiles($tags)
     {
-        $name = isset($tags['name']) ? $tags['name'] : 'PROJECTNAME';
-
         $plugins = $this->plugins;
         $pluginPath = $this->pluginPath;
+
+        $tagName = array();
+        $tagValue = array();
+        foreach($tags as $name => $value) {
+            $tagName[] = strtoupper($name);
+            $tagValue[] = $value;
+        }
+
 
         foreach ($plugins as $plugin) {
             $path = $pluginPath . $plugin;
@@ -77,7 +83,7 @@ class Builder
 
             foreach ($finder as $file) {
                 $longPath = $file->getRealpath();
-                $processedPath = str_replace('PROJECTNAME', $name, $longPath);
+                $processedPath = str_replace($tagName, $tagValue, $longPath);
                 $shortPath = substr($processedPath, $pathLen + 1);
                 if ($file->isDir()) {
                     $this->outputDirectories[] = $shortPath;
