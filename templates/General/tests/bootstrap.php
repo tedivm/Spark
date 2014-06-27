@@ -25,4 +25,4 @@ if (!file_exists($filename)) {
 }
 
 $loader = require $filename;
-$loader->add('PROJECTNAME\\Test', __DIR__);
+$loader->add('{{ name }}\\Test', __DIR__);
