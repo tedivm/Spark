@@ -67,11 +67,10 @@ class Builder
 
         $tagName = array();
         $tagValue = array();
-        foreach($tags as $name => $value) {
+        foreach ($tags as $name => $value) {
             $tagName[] = strtoupper($name);
             $tagValue[] = $value;
         }
-
 
         foreach ($plugins as $plugin) {
             $path = $pluginPath . $plugin;
