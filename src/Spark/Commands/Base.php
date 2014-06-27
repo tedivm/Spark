@@ -6,8 +6,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-abstract class Base extends Command {
-
+abstract class Base extends Command
+{
     protected $name;
     protected $namespace;
     protected $description;
@@ -23,7 +23,7 @@ abstract class Base extends Command {
         $classname = substr($class, strrpos($class, '\\') + 1);
 
         $metaPath = __DIR__ . '/' . $classname . '.json';
-        if(file_exists($metaPath)) {
+        if (file_exists($metaPath)) {
             $this->metaDoc = json_decode(file_get_contents($metaPath), true);
         }
 
@@ -37,8 +37,7 @@ abstract class Base extends Command {
             ->setDescription($this->getDescription())
             ->setHelp($this->help);
 
-
-        foreach($this->getArguments() as $argument) {
+        foreach ($this->getArguments() as $argument) {
             $this->addArgument(
                 $argument[0], // name
                 isset($argument[1]) ? $argument[1] : null, // mode
@@ -47,7 +46,7 @@ abstract class Base extends Command {
             );
         }
 
-        foreach($this->getOptions() as $option) {
+        foreach ($this->getOptions() as $option) {
             $this->addOption(
                 $option[0], // name
                 isset($option[1]) ? $option[1] : null, // shortcut
@@ -62,17 +61,17 @@ abstract class Base extends Command {
     {
         $arguments = $this->arguments;
 
-        if(is_array($this->metaDoc) && isset($this->metaDoc['arguments'])) {
-            foreach($this->metaDoc['arguments'] as $metaArgument) {
+        if (is_array($this->metaDoc) && isset($this->metaDoc['arguments'])) {
+            foreach ($this->metaDoc['arguments'] as $metaArgument) {
 
-                if(isset($metaArgument['required']) && $metaArgument['required'] === true) {
+                if (isset($metaArgument['required']) && $metaArgument['required'] === true) {
                     $mode = InputArgument::REQUIRED;
 
                 } else {
                     $mode = InputArgument::OPTIONAL;
                 }
 
-                if(isset($metaArgument['array']) && $metaArgument['array'] === true) {
+                if (isset($metaArgument['array']) && $metaArgument['array'] === true) {
                     $mode = $mode | InputArgument::IS_ARRAY;
                 }
 
@@ -92,21 +91,21 @@ abstract class Base extends Command {
     {
         $options = $this->options;
 
-        if(is_array($this->metaDoc) && isset($this->metaDoc['options'])) {
-            foreach($this->metaDoc['options'] as $metaOption) {
+        if (is_array($this->metaDoc) && isset($this->metaDoc['options'])) {
+            foreach ($this->metaDoc['options'] as $metaOption) {
 
                 // See if it allows input
-                if(isset($metaOption['input']) && $metaOption['input'] === true) {
+                if (isset($metaOption['input']) && $metaOption['input'] === true) {
 
                     // Defaults to optional if not set.
-                    if(isset($metaOption['required']) && $metaOption['required'] === true) {
+                    if (isset($metaOption['required']) && $metaOption['required'] === true) {
                         $mode = InputOption::VALUE_REQUIRED;
                     } else {
                         $mode = InputOption::VALUE_OPTIONAL;
                     }
 
                     // Defaults to single value
-                    if(isset($metaOption['array']) && $metaOption['array'] === true) {
+                    if (isset($metaOption['array']) && $metaOption['array'] === true) {
                         $mode = $mode | InputOption::VALUE_IS_ARRAY;
                     }
 

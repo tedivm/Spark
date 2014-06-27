@@ -21,7 +21,7 @@ class Application extends \Symfony\Component\Console\Application
             $fullClassName = '\\Spark\\Commands\\' . $class;
 
             $reflectionClass = new \ReflectionClass($fullClassName);
-            if($reflectionClass->IsInstantiable()) {
+            if ($reflectionClass->IsInstantiable()) {
                 $commands[] = new $fullClassName();
             }
         }

@@ -21,7 +21,7 @@ class ResourcesTest extends \PHPUnit_Framework_TestCase
     {
         $resources = new Resources();
 
-        foreach($this->types as $type) {
+        foreach ($this->types as $type) {
 
             $path = $resources->getPath($type);
             $this->assertTrue(file_exists($path), 'Returns valid path.');

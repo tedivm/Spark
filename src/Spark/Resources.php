@@ -2,7 +2,6 @@
 
 namespace Spark;
 
-
 class Resources
 {
     protected $base;
@@ -16,7 +15,7 @@ class Resources
 
     public function getPath($type)
     {
-        if(!isset($this->types[$type])) {
+        if (!isset($this->types[$type])) {
             return false;
         }
 
