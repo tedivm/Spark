@@ -23,10 +23,15 @@ EOT;
         $dir = $input['dir'];
         $plugins = $input['plugins'];
         $configPath = $input['configPath'];
+        $vendor = $input['vendor'];
         $templatePath = $input['templatePath'];
         $templateFiles = $this->getTemplateFiles($name, $plugins, $templatePath);
 
-        $tags = array('name' => $name);
+        $tags = array(
+            'name' => $name,
+            'vendor' => $vendor
+        );
+
         $this->makeDirectories($dir, $templateFiles['directories']);
         $this->makeFiles($dir, $templateFiles['paths'], $templateFiles['files'], $tags);
 
@@ -42,6 +47,12 @@ EOT;
             $dir = $input->getOption('dir');
         }else{
             $dir = getcwd() . '/' . $name . '/';
+        }
+
+        if($input->getOption('vendor')) {
+            $vendor = $input->getOption('vendor');
+        }else{
+            $vendor = 'VENDOR';
         }
 
         $resources = new Resources();
@@ -60,6 +71,7 @@ EOT;
         $options['plugins'] = $packages[$type];
         $options['configPath'] = $configPath;
         $options['templatePath'] = $templatePath;
+        $options['vendor'] = $vendor;
         return $options;
     }
 
