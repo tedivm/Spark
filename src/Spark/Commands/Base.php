@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 abstract class Base extends Command
 {
-    protected $name;
+    protected $classname;
     protected $namespace;
     protected $description;
     protected $help;
@@ -21,15 +21,15 @@ abstract class Base extends Command
     protected function configure()
     {
         $class = get_class($this);
-        $classname = substr($class, strrpos($class, '\\') + 1);
+        $this->classname = substr($class, strrpos($class, '\\') + 1);
 
-        $metaPath = __DIR__ . '/' . $classname . '.json';
+        $metaPath = __DIR__ . '/' . $this->classname . '.json';
         if (file_exists($metaPath)) {
             $this->metaDoc = json_decode(file_get_contents($metaPath), true);
         }
 
         $commandName = isset($this->namespace) ? $this->namespace . ':' : '';
-        $commandName .= isset($this->name) ? $this->name : strtolower($classname);
+        $commandName .= strtolower($this->classname);
 
         $this->setName($commandName);
         $this->setDescription($this->description);
@@ -102,7 +102,8 @@ abstract class Base extends Command
 
         foreach ($plugins as $plugin) {
             $pluginItem = PluginManager::getPluginObject($plugin);
-            $rawOptions = array_merge_recursive($rawOptions, $pluginItem->getCommandOptions($this->name));
+            $pluginOptions = $pluginItem->getCommandOptions($this->classname);
+            $rawOptions = array_merge_recursive($rawOptions, $pluginOptions);
         }
 
         foreach ($rawOptions as $metaOption) {
