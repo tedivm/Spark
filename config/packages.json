@@ -1,13 +1,13 @@
 {
     "general":{
-        "plugins": [
+        "plugins":[
             "General"
         ]
     },
     "cli":{
-            "plugins": [
-                "General",
-                "CLI"
-            ]
+        "extends":"general",
+        "plugins":[
+            "CLI"
+        ]
     }
 }
