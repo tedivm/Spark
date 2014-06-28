@@ -4,8 +4,7 @@
         "src"
     ],
     "directories-bin": [
-        "config",
-        "templates"
+        "config"
     ],
     "files": [
         "LICENSE"
@@ -17,7 +16,7 @@
             "in": "vendor"
         },
         {
-            "in": "templates",
+            "in": "src/Spark/Plugins",
             "ignoreVCS": false,
             "ignoreDotFiles": false
         }

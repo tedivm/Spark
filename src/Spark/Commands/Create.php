@@ -2,6 +2,7 @@
 
 namespace Spark\Commands;
 
+use Spark\Package;
 use Spark\Resources;
 use Spark\Builder;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,7 +17,7 @@ EOT;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('name');
-        $type = $input->getArgument('type');
+        $type = strtolower($input->getArgument('type'));
 
         if ($input->getOption('dir')) {
             $dir = $input->getOption('dir');
@@ -30,34 +31,44 @@ EOT;
             $vendor = 'VENDOR';
         }
 
-        $plugins = $this->getPlugins($type);
-
-        $resources = new Resources();
-        $templatePath = $resources->getPath('templates');
+        if ($input->getOption('author')) {
+            $author = $input->getOption('author');
+        } elseif ($vendor != 'VENDOR') {
+            $author = $vendor;
+        } else {
+            $author = 'author';
+        }
 
         $tags = array(
             'name' => $name,
-            'vendor' => $vendor
+            'vendor' => $vendor,
+            'author' => $author
         );
 
-        $builder = new Builder($plugins, $templatePath);
-        $builder->build($dir, $tags);
+        $package = new Package($type);
+        $templateFiles = $package->getTemplateFiles($input);
+        $templateSources = $package->getTemplateSources();
+        $tags = $package->setTags($tags, $input);
+
+        $builder = new Builder($dir);
+        $builder->setSources($templateSources, $templateFiles['files'], $templateFiles['directories']);
+        $builder->build($tags);
 
         $output->writeln($name . ' has been created using the ' . $type . ' package.');
     }
 
-    protected function getPlugins($type)
+    protected function getPlugins($package)
     {
         $resources = new Resources();
         $configPath = $resources->getPath('config');
 
         $packages = json_decode(file_get_contents($configPath . 'packages.json'), true);
 
-        if (!isset($packages[$type])) {
+        if (!isset($packages[$package])) {
             throw new \RuntimeException('Not a supported type.');
         }
 
-        return $packages[$type];
+        return $packages[$package];
     }
 
 }

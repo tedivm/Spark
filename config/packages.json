@@ -1,9 +1,14 @@
 {
-    "general":[
-        "general"
-    ],
-    "cli":[
-        "general",
-        "cli"
-    ]
+    "general":{
+        "plugins":[
+            "General",
+            "License"
+        ]
+    },
+    "cli":{
+        "extends":"general",
+        "plugins":[
+            "CLI"
+        ]
+    }
 }

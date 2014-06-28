@@ -2,13 +2,14 @@
 
 namespace Spark\Commands;
 
+use Spark\PluginManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 abstract class Base extends Command
 {
-    protected $name;
+    protected $classname;
     protected $namespace;
     protected $description;
     protected $help;
@@ -20,15 +21,15 @@ abstract class Base extends Command
     protected function configure()
     {
         $class = get_class($this);
-        $classname = substr($class, strrpos($class, '\\') + 1);
+        $this->classname = substr($class, strrpos($class, '\\') + 1);
 
-        $metaPath = __DIR__ . '/' . $classname . '.json';
+        $metaPath = __DIR__ . '/' . $this->classname . '.json';
         if (file_exists($metaPath)) {
             $this->metaDoc = json_decode(file_get_contents($metaPath), true);
         }
 
         $commandName = isset($this->namespace) ? $this->namespace . ':' : '';
-        $commandName .= isset($this->name) ? $this->name : strtolower($classname);
+        $commandName .= strtolower($this->classname);
 
         $this->setName($commandName);
         $this->setDescription($this->description);
@@ -91,36 +92,47 @@ abstract class Base extends Command
     {
         $options = $this->options;
 
+        $plugins = PluginManager::getPluginList();
+
         if (is_array($this->metaDoc) && isset($this->metaDoc['options'])) {
-            foreach ($this->metaDoc['options'] as $metaOption) {
+            $rawOptions = $this->metaDoc['options'];
+        } else {
+            $rawOptions = array();
+        }
 
-                // See if it allows input
-                if (isset($metaOption['input']) && $metaOption['input'] === true) {
+        foreach ($plugins as $plugin) {
+            $pluginItem = PluginManager::getPluginObject($plugin);
+            $pluginOptions = $pluginItem->getCommandOptions($this->classname);
+            $rawOptions = array_merge_recursive($rawOptions, $pluginOptions);
+        }
 
-                    // Defaults to optional if not set.
-                    if (isset($metaOption['required']) && $metaOption['required'] === true) {
-                        $mode = InputOption::VALUE_REQUIRED;
-                    } else {
-                        $mode = InputOption::VALUE_OPTIONAL;
-                    }
+        foreach ($rawOptions as $metaOption) {
+            // See if it allows input
+            if (isset($metaOption['input']) && $metaOption['input'] === true) {
 
-                    // Defaults to single value
-                    if (isset($metaOption['array']) && $metaOption['array'] === true) {
-                        $mode = $mode | InputOption::VALUE_IS_ARRAY;
-                    }
-
+                // Defaults to optional if not set.
+                if (isset($metaOption['required']) && $metaOption['required'] === true) {
+                    $mode = InputOption::VALUE_REQUIRED;
                 } else {
-                    $mode = InputOption::VALUE_NONE;
+                    $mode = InputOption::VALUE_OPTIONAL;
                 }
 
-                $options[] = array(
-                    $metaOption['name'], // name
-                    isset($metaOption['shortcut']) ? $metaOption['shortcut'] : null, // mode
-                    $mode, // mode
-                    isset($metaOption['description']) ? $metaOption['description'] : '', // description
-                    isset($metaOption['default']) ? $metaOption['default'] : null // default
-                );
+                // Defaults to single value
+                if (isset($metaOption['array']) && $metaOption['array'] === true) {
+                    $mode = $mode | InputOption::VALUE_IS_ARRAY;
+                }
+
+            } else {
+                $mode = InputOption::VALUE_NONE;
             }
+
+            $options[] = array(
+                $metaOption['name'], // name
+                isset($metaOption['shortcut']) ? $metaOption['shortcut'] : null, // mode
+                $mode, // mode
+                isset($metaOption['description']) ? $metaOption['description'] : '', // description
+                isset($metaOption['default']) ? $metaOption['default'] : null // default
+            );
         }
 
         return $options;

@@ -15,7 +15,7 @@ use Spark\Resources;
 
 class ResourcesTest extends \PHPUnit_Framework_TestCase
 {
-    protected $types = array('templates', 'config');
+    protected $types = array('plugins', 'config');
 
     public function testGetPath()
     {
