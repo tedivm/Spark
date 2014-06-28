@@ -15,7 +15,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // import the Console Application
 use {{ name }}\Application;
 
-$app = new Application();
+$app = new Application('{{ name }}', '@package_version@');
 $app->run();
 
 ?>

@@ -15,7 +15,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // import the Console Application
 use Spark\Application;
 
-$app = new Application();
+$app = new Application('Spark', '@package_version_spark@');
 $app->run();
 
 ?>

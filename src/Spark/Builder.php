@@ -54,7 +54,10 @@ class Builder
 
             if (!file_exists($newFile)) {
                 $contents = $twigEnvironment->render($file, $tags);
-                file_put_contents($newFile, $contents);
+
+                if (file_put_contents($newFile, $contents) === false) {
+                    throw new \RuntimeException('Unable to create file: ' . $newFile);
+                }
             }
         }
 
@@ -81,9 +84,12 @@ class Builder
             $finder->in($path)->ignoreVCS(false)->notName('.gitkeep')->ignoreDotFiles(false);
 
             foreach ($finder as $file) {
-                $longPath = $file->getRealpath();
+
+                $longPath = $file->getPath() . '/' . $file->getFilename();
+
                 $processedPath = str_replace($tagName, $tagValue, $longPath);
                 $shortPath = substr($processedPath, $pathLen + 1);
+
                 if ($file->isDir()) {
                     $this->outputDirectories[] = $shortPath;
                 } else {

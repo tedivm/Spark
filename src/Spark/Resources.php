@@ -9,7 +9,7 @@ class Resources
 
     public function __construct()
     {
-        $this->base = realpath(__DIR__ . '/../../') . '/';
+        $this->base = __DIR__ . '/../../';
 
     }
 
