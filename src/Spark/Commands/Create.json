@@ -13,6 +13,13 @@
             "input":true,
             "description":"Vendor name of project (usually your GitHub username).",
             "default":null
+        },
+        {
+            "name":"author",
+            "shortcut":"a",
+            "input":true,
+            "description":"Author of project (formatted: FirstName LastName <email@domain.tld>).",
+            "default":null
         }
     ],
     "arguments":[

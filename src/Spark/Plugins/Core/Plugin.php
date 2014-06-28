@@ -35,7 +35,13 @@ abstract class Plugin
             return array();
         }
 
-        return json_decode(file_get_contents($path), true);
+        $json = json_decode(file_get_contents($path), true);
+
+        if (isset($json['options'])) {
+            return $json['options'];
+        } else {
+            return array();
+        }
     }
 
     public function getPath($type = null)

@@ -31,9 +31,18 @@ EOT;
             $vendor = 'VENDOR';
         }
 
+        if ($input->getOption('author')) {
+            $author = $input->getOption('author');
+        } elseif($vendor != 'VENDOR') {
+            $author = $vendor;
+        } else {
+            $author = 'author';
+        }
+
         $tags = array(
             'name' => $name,
-            'vendor' => $vendor
+            'vendor' => $vendor,
+            'author' => $author
         );
 
         $package = new Package($type);
