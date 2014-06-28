@@ -1,0 +1,29 @@
+{
+    "chmod": "0755",
+    "directories": [
+        "src"
+    ],
+    "directories-bin": [
+        "config",
+        "templates"
+    ],
+    "files": [
+        "LICENSE"
+    ],
+    "finder": [
+        {
+            "name": "*.php",
+            "exclude": ["Tests"],
+            "in": "vendor"
+        },
+        {
+            "in": "templates",
+            "ignoreVCS": false,
+            "ignoreDotFiles": false
+        }
+    ],
+    "git-version": "package_version_spark",
+    "main": "app/console",
+    "output": "spark.phar",
+    "stub": true
+}
