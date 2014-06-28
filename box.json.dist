@@ -17,7 +17,7 @@
             "in": "vendor"
         },
         {
-            "in": "templates",
+            "in": "src/Spark/Plugins",
             "ignoreVCS": false,
             "ignoreDotFiles": false
         }

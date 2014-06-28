@@ -76,7 +76,7 @@ class Builder
         }
 
         foreach ($plugins as $plugin) {
-            $path = $pluginPath . $plugin;
+            $path = $pluginPath . $plugin . '/Templates';
             $this->templateSourceDirectories[] = $path;
             $pathLen = strlen($path);
 

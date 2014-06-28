@@ -16,7 +16,7 @@ EOT;
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('name');
-        $type = $input->getArgument('type');
+        $type = strtolower($input->getArgument('type'));
 
         if ($input->getOption('dir')) {
             $dir = $input->getOption('dir');
@@ -46,14 +46,14 @@ EOT;
         $output->writeln($name . ' has been created using the ' . $type . ' package.');
     }
 
-    protected function getPlugins($type)
+    protected function getPlugins($package)
     {
         $resources = new Resources();
         $configPath = $resources->getPath('config');
 
         $packages = json_decode(file_get_contents($configPath . 'packages.json'), true);
 
-        if (!isset($packages[$type])) {
+        if (!isset($packages[$package])) {
             throw new \RuntimeException('Not a supported type.');
         }
 
