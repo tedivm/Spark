@@ -5,7 +5,7 @@ namespace Spark;
 class Resources
 {
     protected $base;
-    protected $types = array('plugins' => 'src/Plugins/', 'config' => 'config/');
+    protected $types = array('plugins' => 'src/Spark/Plugins/', 'config' => 'config/');
 
     public function __construct()
     {

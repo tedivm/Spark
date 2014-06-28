@@ -4,8 +4,7 @@
         "src"
     ],
     "directories-bin": [
-        "config",
-        "templates"
+        "config"
     ],
     "files": [
         "LICENSE"

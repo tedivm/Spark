@@ -33,14 +33,14 @@ EOT;
         $plugins = $this->getPlugins($type);
 
         $resources = new Resources();
-        $templatePath = $resources->getPath('templates');
+        $pluginPath = $resources->getPath('plugins');
 
         $tags = array(
             'name' => $name,
             'vendor' => $vendor
         );
 
-        $builder = new Builder($plugins, $templatePath);
+        $builder = new Builder($plugins, $pluginPath);
         $builder->build($dir, $tags);
 
         $output->writeln($name . ' has been created using the ' . $type . ' package.');
@@ -57,7 +57,7 @@ EOT;
             throw new \RuntimeException('Not a supported type.');
         }
 
-        return $packages[$type];
+        return $packages[$package];
     }
 
 }
