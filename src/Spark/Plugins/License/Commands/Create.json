@@ -1,0 +1,11 @@
+{
+    "options":[
+        {
+            "name":"license",
+            "shortcut":"l",
+            "input":true,
+            "description":"License the project will be created with.",
+            "default":null
+        }
+    ]
+}

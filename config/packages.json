@@ -1,7 +1,8 @@
 {
     "general":{
         "plugins":[
-            "General"
+            "General",
+            "License"
         ]
     },
     "cli":{
