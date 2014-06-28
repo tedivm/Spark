@@ -71,7 +71,7 @@ class Builder
         $tagNames = array();
         $tagValues = array();
         foreach ($tags as $name => $value) {
-            $tagNames[] = strtoupper($name);
+            $tagNames[] = '__' . strtoupper($name) . '__';
             $tagValues[] = $value;
         }
 
