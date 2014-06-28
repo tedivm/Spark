@@ -15,10 +15,10 @@ class Resources
 
     public function getPath($type)
     {
-        if (!isset($this->$directories[$type])) {
+        if (!isset($this->directories[$type])) {
             return false;
         }
 
-        return $this->base . $this->$directories[$type];
+        return $this->base . $this->directories[$type];
     }
 }
