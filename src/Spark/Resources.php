@@ -5,7 +5,7 @@ namespace Spark;
 class Resources
 {
     protected $base;
-    protected $types = array('plugins' => 'src/Spark/Plugins/', 'config' => 'config/');
+    protected $directories = array('plugins' => 'src/Spark/Plugins/', 'config' => 'config/');
 
     public function __construct()
     {
@@ -15,10 +15,10 @@ class Resources
 
     public function getPath($type)
     {
-        if (!isset($this->types[$type])) {
+        if (!isset($this->$directories[$type])) {
             return false;
         }
 
-        return $this->base . $this->types[$type];
+        return $this->base . $this->$directories[$type];
     }
 }
