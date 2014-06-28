@@ -33,7 +33,7 @@ EOT;
 
         if ($input->getOption('author')) {
             $author = $input->getOption('author');
-        } elseif($vendor != 'VENDOR') {
+        } elseif ($vendor != 'VENDOR') {
             $author = $vendor;
         } else {
             $author = 'author';

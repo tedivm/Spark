@@ -17,7 +17,6 @@ class Plugin extends Base
         return array('files' => array('LICENSE'));
     }
 
-
     public function setTags(&$tags, InputInterface $input)
     {
         $license = $input->getOption('license');
