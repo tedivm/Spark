@@ -2,6 +2,7 @@
 
 namespace Spark\Commands;
 
+use Spark\Package;
 use Spark\Resources;
 use Spark\Builder;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,18 +31,19 @@ EOT;
             $vendor = 'VENDOR';
         }
 
-        $plugins = $this->getPlugins($type);
-
-        $resources = new Resources();
-        $pluginPath = $resources->getPath('plugins');
-
         $tags = array(
             'name' => $name,
             'vendor' => $vendor
         );
 
-        $builder = new Builder($plugins, $pluginPath);
-        $builder->build($dir, $tags);
+        $package = new Package($type);
+        $templateFiles = $package->getTemplateFiles();
+        $templateSources = $package->getTemplateSources();
+        $tags = $package->setTags($tags, $input);
+
+        $builder = new Builder($dir);
+        $builder->setSources($templateSources, $templateFiles['files'], $templateFiles['directories']);
+        $builder->build($tags);
 
         $output->writeln($name . ' has been created using the ' . $type . ' package.');
     }

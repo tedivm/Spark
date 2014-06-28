@@ -2,55 +2,58 @@
 
 namespace Spark;
 
-use Symfony\Component\Finder\Finder;
-
 class Builder
 {
+    protected $outputPath;
 
-    protected $plugins;
-    protected $pluginPath;
+    protected $files;
+    protected $directories;
+    protected $sources;
 
-    protected $templateSourceDirectories = array();
-
-    protected $outputDirectories = array();
-    protected $outputFiles = array();
-
-    public function __construct($plugins, $pluginsPath)
+    public function __construct($outputPath)
     {
-        $this->plugins = $plugins;
-        $this->pluginPath = $pluginsPath;
+        $this->outputPath = $outputPath;
     }
 
-    public function build($outputDirectory, $tags)
+    public function setSources($sources, $files, $directories)
     {
-        $this->getTemplateFiles($tags);
-        $this->makeDirectories($outputDirectory);
-        $this->makeFiles($outputDirectory, $tags);
+        $this->files = $files;
+        $this->directories = $directories;
+        $this->sources = $sources;
     }
 
-    protected function makeDirectories($base)
+    public function build($tags)
     {
-        if (!is_dir($base)) {
-            mkdir($base);
+        $this->makeDirectories($tags);
+        $this->makeFiles($tags);
+    }
+
+    protected function makeDirectories($tags)
+    {
+        if (!is_dir($this->outputPath)) {
+            mkdir($this->outputPath);
         }
 
-        foreach ($this->outputDirectories as $directory) {
-            $newDir = $base . $directory;
+        $fsTags = $this->getFilesystemReplacements($tags);
+
+        foreach ($this->directories as $directory) {
+            $newDir = $this->outputPath . str_replace($fsTags[0], $fsTags[1], $directory);
             if (!is_dir($newDir)) {
                 mkdir($newDir);
             }
         }
     }
 
-    protected function makeFiles($base, $tags)
+    protected function makeFiles($tags)
     {
-        $paths = $this->templateSourceDirectories;
+        $fsTags = $this->getFilesystemReplacements($tags);
 
-        $twigFilesystem = new \Twig_Loader_Filesystem(array_reverse($paths));
+        $twigFilesystem = new \Twig_Loader_Filesystem(array_reverse($this->sources));
         $twigEnvironment = new \Twig_Environment($twigFilesystem);
 
-        foreach ($this->outputFiles as $file) {
-            $newFile = $base . $file;
+        foreach ($this->files as $file) {
+
+            $newFile = $this->outputPath . str_replace($fsTags[0], $fsTags[1], $file);
 
             if (!file_exists($newFile)) {
                 $contents = $twigEnvironment->render($file, $tags);
@@ -63,40 +66,16 @@ class Builder
 
     }
 
-    protected function getTemplateFiles($tags)
+    protected function getFilesystemReplacements($tags)
     {
-        $plugins = $this->plugins;
-        $pluginPath = $this->pluginPath;
-
-        $tagName = array();
-        $tagValue = array();
+        $tagNames = array();
+        $tagValues = array();
         foreach ($tags as $name => $value) {
-            $tagName[] = strtoupper($name);
-            $tagValue[] = $value;
+            $tagNames[] = strtoupper($name);
+            $tagValues[] = $value;
         }
 
-        foreach ($plugins as $plugin) {
-            $path = $pluginPath . $plugin . '/Templates';
-            $this->templateSourceDirectories[] = $path;
-            $pathLen = strlen($path);
-
-            $finder = new Finder();
-            $finder->in($path)->ignoreVCS(false)->notName('.gitkeep')->ignoreDotFiles(false);
-
-            foreach ($finder as $file) {
-
-                $longPath = $file->getPath() . '/' . $file->getFilename();
-
-                $processedPath = str_replace($tagName, $tagValue, $longPath);
-                $shortPath = substr($processedPath, $pathLen + 1);
-
-                if ($file->isDir()) {
-                    $this->outputDirectories[] = $shortPath;
-                } else {
-                    $this->outputFiles[] = $shortPath;
-                }
-            }
-        }
+        return array($tagNames, $tagValues);
     }
 
 }

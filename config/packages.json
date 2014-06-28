@@ -1,9 +1,13 @@
 {
-    "general":[
-        "General"
-    ],
-    "cli":[
-        "General",
-        "CLI"
-    ]
+    "general":{
+        "plugins": [
+            "General"
+        ]
+    },
+    "cli":{
+            "plugins": [
+                "General",
+                "CLI"
+            ]
+    }
 }
