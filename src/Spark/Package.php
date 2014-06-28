@@ -9,11 +9,6 @@ class Package
     protected $plugins = array();
     protected $pluginObjects = array();
 
-    protected $files;
-    protected $directories;
-
-    protected $tags;
-
     public function __construct($packageName)
     {
         $config = $this->getConfig($packageName);
@@ -21,10 +16,6 @@ class Package
         foreach ($this->plugins as $plugin) {
            $this->pluginObjects[$plugin] = PluginManager::getPluginObject($plugin);
         }
-
-        $files = $this->getTemplateFiles();
-        $this->files = $files['files'];
-        $this->directories = $files['directories'];
     }
 
     public function setTags($tags, InputInterface $input)
@@ -37,17 +28,12 @@ class Package
         return $tags;
     }
 
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    public function getTemplateFiles()
+    public function getTemplateFiles(InputInterface $input)
     {
         $templates = array('files' => array(), 'directories' => array());
         foreach ($this->plugins as $plugin) {
             $pluginObject = $this->getPluginObject($plugin);
-            $templatesItems = $pluginObject->getTemplateFiles();
+            $templatesItems = $pluginObject->getTemplateFiles($input);
             $templates = array_merge_recursive($templates, $templatesItems);
         }
 

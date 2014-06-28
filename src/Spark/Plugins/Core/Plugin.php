@@ -22,6 +22,22 @@ abstract class Plugin
         $this->directory = $resources->getPath('plugins') . $this->name . '/';
     }
 
+    public function getCommandOptions($command)
+    {
+        $path = $this->getPath('Commands');
+        if ($path === false) {
+            return array();
+        }
+
+        $path .= $command . '.json';
+
+        if (!file_exists($path)) {
+            return array();
+        }
+
+        return json_decode(file_get_contents($path), true);
+    }
+
     public function getPath($type = null)
     {
         $path = $this->directory;
@@ -33,7 +49,7 @@ abstract class Plugin
         return file_exists($path) ? $path : false;
     }
 
-    public function getTemplateFiles()
+    public function getTemplateFiles(InputInterface $input)
     {
         $path = $this->getPath('Templates');
         if ($path === false) {

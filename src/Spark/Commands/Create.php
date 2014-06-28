@@ -37,7 +37,7 @@ EOT;
         );
 
         $package = new Package($type);
-        $templateFiles = $package->getTemplateFiles();
+        $templateFiles = $package->getTemplateFiles($input);
         $templateSources = $package->getTemplateSources();
         $tags = $package->setTags($tags, $input);
 
