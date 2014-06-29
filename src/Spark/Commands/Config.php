@@ -42,7 +42,12 @@ EOT;
             }
         }
 
-        file_put_contents($path, json_encode($options));
+        $jsonSettings = 0;
+        if(defined('JSON_PRETTY_PRINT')) {
+            $jsonSettings = $jsonSettings | JSON_PRETTY_PRINT;
+        }
+
+        file_put_contents($path, json_encode($options, $jsonSettings));
 
         $output->writeln('Configuration saved to ' . $path);
     }
