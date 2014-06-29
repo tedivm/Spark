@@ -1,15 +1,9 @@
 {
     "name": "{{ vendor|lower }}/{{ name|lower }}",
     "description": "",
-    "keywords": ["",""],
     "homepage": "http://github.com/{{ vendor }}/{{ name }}",
     "type": "library",
-{% if license %}    "license": "{{ license }}",{% endif %}
-{% if authors %}    "authors": [
-        {
-        {{ authors }}
-        }
-    ],{% endif %}
+    "license": "{{ license }}",
     "require": {
         "php": ">=5.3.0"
     },

@@ -69,6 +69,7 @@ EOT;
         $templateSources = $package->getTemplateSources();
         $templatePermissions = $package->getPermissions();
         $tags = $package->setTags($tags, $input);
+        $config = $package->getConfig($input);
 
         $builder = new Builder($dir);
         $builder->setSources(
@@ -77,7 +78,7 @@ EOT;
             $templateFiles['directories'],
             $templatePermissions
         );
-
+        $builder->setConfig($config);
         $builder->build($tags);
 
         $output->writeln($name . ' has been created using the ' . $type . ' package.');

@@ -2,6 +2,8 @@
 
 namespace Spark;
 
+use Symfony\Component\Yaml\Yaml;
+
 class Builder
 {
     protected $outputPath;
@@ -10,6 +12,8 @@ class Builder
     protected $directories;
     protected $sources;
     protected $permissions;
+
+    protected $config;
 
     public function __construct($outputPath)
     {
@@ -22,6 +26,11 @@ class Builder
         $this->directories = $directories;
         $this->sources = $sources;
         $this->permissions = $permissions;
+    }
+
+    public function setConfig($config)
+    {
+        $this->config = $config;
     }
 
     public function build($tags)
@@ -51,8 +60,12 @@ class Builder
     {
         $fsTags = $this->getFilesystemReplacements($tags);
 
-        $twigFilesystem = new \Twig_Loader_Filesystem(array_reverse($this->sources));
-        $twigEnvironment = new \Twig_Environment($twigFilesystem);
+        $twigChainLoader = new \Twig_Loader_Chain(array(
+            new \Twig_Loader_Array($this->makeConfigTemplates()),
+            new \Twig_Loader_Filesystem(array_reverse($this->sources)),
+        ));
+
+        $twigEnvironment = new \Twig_Environment($twigChainLoader);
 
         foreach ($this->files as $file) {
 
@@ -66,6 +79,50 @@ class Builder
                 }
             }
         }
+    }
+
+    protected function makeConfigTemplates()
+    {
+        $json_options = 0;
+        if (defined('JSON_PRETTY_PRINT')) {
+            $json_options = $json_options | JSON_PRETTY_PRINT;
+        }
+
+        if (defined('JSON_UNESCAPED_SLASHES')) {
+            $json_options = $json_options | JSON_UNESCAPED_SLASHES;
+        }
+
+        $templates = array();
+        foreach ($this->config as $file => $rawContents) {
+
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+
+            if ($ext == 'dist') {
+                $fileSubName = substr($file, 0, strlen($file) - 5);
+                $ext = pathinfo($fileSubName, PATHINFO_EXTENSION);
+            }
+
+            switch ($ext) {
+                case 'yml':
+                    $contents = $this->yamlPretty(Yaml::dump($rawContents, 3));
+                    break;
+
+                case 'json':
+                    $contents = json_encode($rawContents, $json_options);
+                    break;
+
+                default:
+                    if (is_scalar($rawContents)) {
+                        $contents = $rawContents;
+                    } else {
+                        throw new \RuntimeException('Unable to identify config file parser for ' . $file);
+                    }
+            }
+
+            $templates[$file] = $contents;
+        }
+
+        return $templates;
     }
 
     protected function setPermissions($tags)
@@ -88,6 +145,42 @@ class Builder
         }
 
         return array($tagNames, $tagValues);
+    }
+
+    protected function yamlPretty($yaml)
+    {
+        $yamlLines = explode("\n", $yaml);
+        $hasIndents = false;
+        foreach ($yamlLines as $line) {
+            if (preg_match('/^(\s+)/',$line,$matches) !== 0) {
+                $hasIndents = true;
+                break;
+            }
+        }
+
+        if (!$hasIndents) {
+            return $yaml;
+        }
+
+        $output = '';
+        $previousSpaceCount = -1;
+        foreach ($yamlLines as $line) {
+
+            if (preg_match('/^(\s+)/',$line,$matches) !== 0) {
+                $currentSpaceCount = strlen($matches[1]);
+            } else {
+                $currentSpaceCount = 0;
+            }
+
+            if ($currentSpaceCount < $previousSpaceCount || ($previousSpaceCount == 0 && $currentSpaceCount == 0)) {
+                $output .= "\n";
+            }
+            $output .= $line . "\n";
+            $previousSpaceCount = $currentSpaceCount;
+        }
+
+        return rtrim($output);
+
     }
 
 }
