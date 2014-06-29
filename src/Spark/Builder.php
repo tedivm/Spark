@@ -104,7 +104,7 @@ class Builder
 
             switch ($ext) {
                 case 'yml':
-                    $contents = Yaml::dump($rawContents, 3, 4, false, true);
+                    $contents = $this->yamlPretty(Yaml::dump($rawContents, 3));
                     break;
 
                 case 'json':
@@ -145,6 +145,42 @@ class Builder
         }
 
         return array($tagNames, $tagValues);
+    }
+
+    protected function yamlPretty($yaml)
+    {
+        $yamlLines = explode("\n", $yaml);
+        $hasIndents = false;
+        foreach ($yamlLines as $line) {
+            if (preg_match('/^(\s+)/',$line,$matches) !== 0) {
+                $hasIndents = true;
+                break;
+            }
+        }
+
+        if (!$hasIndents) {
+            return $yaml;
+        }
+
+        $output = '';
+        $previousSpaceCount = -1;
+        foreach ($yamlLines as $line) {
+
+            if (preg_match('/^(\s+)/',$line,$matches) !== 0) {
+                $currentSpaceCount = strlen($matches[1]);
+            } else {
+                $currentSpaceCount = 0;
+            }
+
+            if ($currentSpaceCount < $previousSpaceCount || ($previousSpaceCount == 0 && $currentSpaceCount == 0)) {
+                $output .= "\n";
+            }
+            $output .= $line . "\n";
+            $previousSpaceCount = $currentSpaceCount;
+        }
+
+        return rtrim($output);
+
     }
 
 }
