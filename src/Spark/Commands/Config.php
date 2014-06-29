@@ -4,11 +4,21 @@ namespace Spark\Commands;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Exception\RuntimeException;
 
 class Config extends Base
 {
-    protected $description = 'Description';
+    protected $description = 'Define default configuration settings for new projects.';
     protected $help = <<<EOT
+The <info>%command.name%</info> command sets default options for new projects:
+
+  <info>php %command.full_name% -l mit</info>
+  <info>php %command.full_name% -a Robert</info>
+  <info>php %command.full_name% -u tedivm</info>
+
+You can reset back to the built in defaults with the <comment>--clear</comment> option:
+
+  <info>php %command.full_name% --clear</info>
 EOT;
 
     protected $ignoreOptions = array(
@@ -28,8 +38,16 @@ EOT;
         $path = $_SERVER['HOME'] . '/.spark.json';
 
         if ($input->getOption('clear')) {
-            unlink($path);
-            $output->writeln('Configuration deleted from ' . $path);
+            if (file_exists($path)) {
+                if (!is_writable($path)) {
+                    throw new RuntimeException('Need write permission to erase file ' . $path);
+                }
+
+                unlink($path);
+                $output->writeln('Configuration deleted from ' . $path);
+            } else {
+                $output->writeln('Configuration was not present at ' . $path);
+            }
 
             return;
         }
@@ -43,13 +61,15 @@ EOT;
         }
 
         $jsonSettings = 0;
-        if(defined('JSON_PRETTY_PRINT')) {
+        if (defined('JSON_PRETTY_PRINT')) {
             $jsonSettings = $jsonSettings | JSON_PRETTY_PRINT;
         }
 
-        file_put_contents($path, json_encode($options, $jsonSettings));
-
-        $output->writeln('Configuration saved to ' . $path);
+        if (file_put_contents($path, json_encode($options, $jsonSettings))) {
+            $output->writeln('Configuration saved to ' . $path);
+        } else {
+            $output->writeln('Unable to save configuration to ' . $path);
+        }
     }
 
     public function getOptionConfigs()
