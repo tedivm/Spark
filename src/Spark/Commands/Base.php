@@ -48,9 +48,14 @@ abstract class Base extends Command
             );
         }
 
-        $userValues = new UserValues();
+        $options = $this->getOptionConfigs();
+        usort($options, function ($a, $b) {
+                return strcmp($a[0], $b[0]);
+            }
+        );
 
-        foreach ($this->getOptionConfigs() as $option) {
+        $userValues = new UserValues();
+        foreach ($options as $option) {
 
             $userOverride = $userValues->getValue($option[0]);
             if (!is_null($userOverride)) {
