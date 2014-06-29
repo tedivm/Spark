@@ -9,23 +9,26 @@ class Builder
     protected $files;
     protected $directories;
     protected $sources;
+    protected $permissions;
 
     public function __construct($outputPath)
     {
         $this->outputPath = $outputPath;
     }
 
-    public function setSources($sources, $files, $directories)
+    public function setSources($sources, $files, $directories, $permissions)
     {
         $this->files = $files;
         $this->directories = $directories;
         $this->sources = $sources;
+        $this->permissions = $permissions;
     }
 
     public function build($tags)
     {
         $this->makeDirectories($tags);
         $this->makeFiles($tags);
+        $this->setPermissions($tags);
     }
 
     protected function makeDirectories($tags)
@@ -63,7 +66,16 @@ class Builder
                 }
             }
         }
+    }
 
+    protected function setPermissions($tags)
+    {
+        $fsTags = $this->getFilesystemReplacements($tags);
+
+        foreach ($this->permissions as $file => $permission) {
+            $newFile = $this->outputPath . str_replace($fsTags[0], $fsTags[1], $file);
+            chmod($newFile, $permission);
+        }
     }
 
     protected function getFilesystemReplacements($tags)

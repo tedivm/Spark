@@ -51,6 +51,17 @@ class Package
         return $sources;
     }
 
+    public function getPermissions()
+    {
+        $permissions = array();
+        foreach ($this->plugins as $plugin) {
+            $pluginObject = $this->getPluginObject($plugin);
+            $permissions = array_merge_recursive($permissions, $pluginObject->getPermissions());
+        }
+
+        return $permissions;
+    }
+
     protected function getPluginObject($plugin)
     {
         return $this->pluginObjects[$plugin];
