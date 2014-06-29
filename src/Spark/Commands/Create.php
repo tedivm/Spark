@@ -48,10 +48,17 @@ EOT;
         $package = new Package($type);
         $templateFiles = $package->getTemplateFiles($input);
         $templateSources = $package->getTemplateSources();
+        $templatePermissions = $package->getPermissions();
         $tags = $package->setTags($tags, $input);
 
         $builder = new Builder($dir);
-        $builder->setSources($templateSources, $templateFiles['files'], $templateFiles['directories']);
+        $builder->setSources(
+            $templateSources,
+            $templateFiles['files'],
+            $templateFiles['directories'],
+            $templatePermissions
+        );
+
         $builder->build($tags);
 
         $output->writeln($name . ' has been created using the ' . $type . ' package.');

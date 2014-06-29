@@ -11,6 +11,8 @@ abstract class Plugin
     protected $name;
     protected $directory;
 
+    protected $permissions = array();
+
     public function __construct()
     {
         $className = get_class($this);
@@ -53,6 +55,11 @@ abstract class Plugin
         }
 
         return file_exists($path) ? $path : false;
+    }
+
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 
     public function getTemplateFiles(InputInterface $input)
