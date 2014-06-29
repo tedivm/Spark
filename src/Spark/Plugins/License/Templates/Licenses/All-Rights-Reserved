@@ -1,0 +1,2 @@
+Copyright (c) {{ "now"|date("Y") }} {{ author }}
+All Rights Reserved
