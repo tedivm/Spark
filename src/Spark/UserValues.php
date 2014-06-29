@@ -23,7 +23,10 @@ class UserValues
 
                 $json = file_get_contents($file);
                 $contents = json_decode($json, true);
-                $values = array_merge_recursive($values, $contents);
+
+                if (is_array($contents)) {
+                    $values = array_merge_recursive($values, $contents);
+                }
             }
             static::$values = $values;
         }

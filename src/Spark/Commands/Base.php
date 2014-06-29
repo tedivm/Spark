@@ -39,7 +39,7 @@ abstract class Base extends Command
             ->setDescription($this->getDescription())
             ->setHelp($this->help);
 
-        foreach ($this->getArguments() as $argument) {
+        foreach ($this->getArgumentConfigs() as $argument) {
             $this->addArgument(
                 $argument[0], // name
                 isset($argument[1]) ? $argument[1] : null, // mode
@@ -50,7 +50,7 @@ abstract class Base extends Command
 
         $userValues = new UserValues();
 
-        foreach ($this->getOptions() as $option) {
+        foreach ($this->getOptionConfigs() as $option) {
 
             $userOverride = $userValues->getValue($option[0]);
             if (!is_null($userOverride)) {
@@ -67,7 +67,7 @@ abstract class Base extends Command
         }
     }
 
-    protected function getArguments()
+    public function getArgumentConfigs()
     {
         $arguments = $this->arguments;
 
@@ -76,7 +76,6 @@ abstract class Base extends Command
 
                 if (isset($metaArgument['required']) && $metaArgument['required'] === true) {
                     $mode = InputArgument::REQUIRED;
-
                 } else {
                     $mode = InputArgument::OPTIONAL;
                 }
@@ -97,7 +96,7 @@ abstract class Base extends Command
         return $arguments;
     }
 
-    protected function getOptions()
+    public function getOptionConfigs()
     {
         $options = $this->options;
 

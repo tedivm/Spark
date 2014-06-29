@@ -89,7 +89,7 @@ abstract class Plugin
                 $output['files'][] = $shortPath;
             }
         }
-//var_dump($output);
+
         return $output;
     }
 
