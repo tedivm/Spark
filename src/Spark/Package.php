@@ -11,7 +11,7 @@ class Package
 
     public function __construct($packageName)
     {
-        $config = $this->getConfig($packageName);
+        $config = $this->getPackageConfig($packageName);
         $this->plugins = $config['plugins'];
         foreach ($this->plugins as $plugin) {
            $this->pluginObjects[$plugin] = PluginManager::getPluginObject($plugin);
@@ -26,6 +26,17 @@ class Package
         }
 
         return $tags;
+    }
+
+    public function getConfig(InputInterface $input)
+    {
+        $config = array();
+        foreach ($this->plugins as $plugin) {
+            $pluginObject = $this->getPluginObject($plugin);
+            $pluginObject->setConfig($config, $input);
+        }
+
+        return $config;
     }
 
     public function getTemplateFiles(InputInterface $input)
@@ -67,7 +78,7 @@ class Package
         return $this->pluginObjects[$plugin];
     }
 
-    protected function getConfig($package)
+    protected function getPackageConfig($package)
     {
         $resources = new Resources();
         $configPath = $resources->getPath('config');

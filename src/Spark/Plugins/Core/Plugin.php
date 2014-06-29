@@ -5,13 +5,18 @@ namespace Spark\Plugins\Core;
 use Spark\Resources;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Yaml;
 
 abstract class Plugin
 {
     protected $name;
     protected $directory;
 
+    protected $configExtensions = array('yml', 'json');
+    protected $templateFiles = array();
+
     protected $permissions = array();
+    protected $config = array();
 
     public function __construct()
     {
@@ -22,6 +27,8 @@ abstract class Plugin
         $this->name = $classNameParts[$classNamePartCount - 2];
         $resources = new Resources();
         $this->directory = $resources->getPath('plugins') . $this->name . '/';
+
+        $this->loadTemplateFiles();
     }
 
     public function getCommandOptions($command)
@@ -64,6 +71,11 @@ abstract class Plugin
 
     public function getTemplateFiles(InputInterface $input)
     {
+        return $this->templateFiles;
+    }
+
+    public function loadTemplateFiles()
+    {
         $path = $this->getPath('Templates');
         if ($path === false) {
             return array();
@@ -78,6 +90,8 @@ abstract class Plugin
             ->ignoreDotFiles(false);
 
         $output = array();
+
+        /** @var $file \SplFileInfo */
         foreach ($finder as $file) {
 
             $longPath = $file->getPath() . '/' . $file->getFilename();
@@ -86,16 +100,42 @@ abstract class Plugin
             if ($file->isDir()) {
                 $output['directories'][] = $shortPath;
             } else {
+
+                $extension = $file->getExtension();
+
+                // If it's a "dist" file find the real extension.
+                if ($extension == 'dist') {
+                    $fileName = $file->getFilename();
+                    $fileSubName = substr($fileName, 0, strlen($fileName) - 5);
+                    $extension = pathinfo($fileSubName, PATHINFO_EXTENSION);
+                }
+
+                switch ($extension) {
+                    case 'json':
+                        $this->config[$shortPath] = json_decode(file_get_contents($longPath), true);
+                        break;
+
+                    case 'yml':
+                        $this->config[$shortPath] = Yaml::parse(file_get_contents($longPath));
+                        break;
+
+                }
+
                 $output['files'][] = $shortPath;
             }
         }
 
-        return $output;
+        $this->templateFiles = $output;
     }
 
     public function setTags(&$tags, InputInterface $input)
     {
 
+    }
+
+    public function setConfig(&$config, InputInterface $input)
+    {
+        $config = array_merge_recursive($config, $this->config);
     }
 
 }
