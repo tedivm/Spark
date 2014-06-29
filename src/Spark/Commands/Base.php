@@ -3,6 +3,7 @@
 namespace Spark\Commands;
 
 use Spark\PluginManager;
+use Spark\UserValues;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -47,7 +48,15 @@ abstract class Base extends Command
             );
         }
 
+        $userValues = new UserValues();
+
         foreach ($this->getOptions() as $option) {
+
+            $userOverride = $userValues->getValue($option[0]);
+            if (!is_null($userOverride)) {
+                $option[4] = $userOverride;
+            }
+
             $this->addOption(
                 $option[0], // name
                 isset($option[1]) ? $option[1] : null, // shortcut
