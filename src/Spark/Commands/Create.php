@@ -10,8 +10,27 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Create extends Base
 {
-    protected $description = 'Description';
+    protected $description = 'Create new development project from specified package.';
     protected $help = <<<EOT
+The <info>%command.name%</info> command creates new project:
+
+  <info>php %command.full_name% ProjectName</info>
+
+You can select different project types:
+
+  <info>php %command.full_name% ProjectName general</info>
+  <info>php %command.full_name% ProjectName cli</info>
+
+You can specify which directory the project will be created with by using the <comment>--dir</comment> option:
+
+  <info>php %command.full_name% ProjectName --dir=/path/to/new/Project</info>
+  <info>php %command.full_name% ProjectName -d /path/to/new/Project</info>
+
+It's also possible to change different template values:
+
+  <info>php %command.full_name% ProjectName -l mit</info>
+  <info>php %command.full_name% ProjectName -a Robert</info>
+  <info>php %command.full_name% ProjectName -u tedivm</info>
 EOT;
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -3,6 +3,7 @@
 namespace Spark\Commands;
 
 use Spark\PluginManager;
+use Spark\UserValues;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -38,7 +39,7 @@ abstract class Base extends Command
             ->setDescription($this->getDescription())
             ->setHelp($this->help);
 
-        foreach ($this->getArguments() as $argument) {
+        foreach ($this->getArgumentConfigs() as $argument) {
             $this->addArgument(
                 $argument[0], // name
                 isset($argument[1]) ? $argument[1] : null, // mode
@@ -47,7 +48,20 @@ abstract class Base extends Command
             );
         }
 
-        foreach ($this->getOptions() as $option) {
+        $options = $this->getOptionConfigs();
+        usort($options, function ($a, $b) {
+                return strcmp($a[0], $b[0]);
+            }
+        );
+
+        $userValues = new UserValues();
+        foreach ($options as $option) {
+
+            $userOverride = $userValues->getValue($option[0]);
+            if (!is_null($userOverride)) {
+                $option[4] = $userOverride;
+            }
+
             $this->addOption(
                 $option[0], // name
                 isset($option[1]) ? $option[1] : null, // shortcut
@@ -58,7 +72,7 @@ abstract class Base extends Command
         }
     }
 
-    protected function getArguments()
+    public function getArgumentConfigs()
     {
         $arguments = $this->arguments;
 
@@ -67,7 +81,6 @@ abstract class Base extends Command
 
                 if (isset($metaArgument['required']) && $metaArgument['required'] === true) {
                     $mode = InputArgument::REQUIRED;
-
                 } else {
                     $mode = InputArgument::OPTIONAL;
                 }
@@ -88,7 +101,7 @@ abstract class Base extends Command
         return $arguments;
     }
 
-    protected function getOptions()
+    public function getOptionConfigs()
     {
         $options = $this->options;
 
