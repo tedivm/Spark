@@ -78,7 +78,6 @@ class Builder
         }
     }
 
-
     protected function getFilesystemReplacements($tags)
     {
         $tagNames = array();
