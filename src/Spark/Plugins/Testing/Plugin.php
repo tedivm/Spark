@@ -14,4 +14,16 @@ class Plugin extends Base
     protected $tags = array(
         'test_dir' => 'tests',
     );
+
+    protected $config = array(
+        'composer.json' =>
+            array('required-dev' =>
+                array(
+                    "phpunit/phpunit" => "4.0.*",
+                    "fabpot/php-cs-fixer"=> "0.4.0",
+                    "satooshi/php-coveralls"=> "dev-master"
+                )
+            )
+    );
+
 }
