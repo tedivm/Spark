@@ -2,7 +2,8 @@
     "general":{
         "plugins":[
             "General",
-            "License"
+            "License",
+            "Testing"
         ]
     },
     "cli":{
