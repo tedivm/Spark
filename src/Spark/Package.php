@@ -30,13 +30,13 @@ class Package
         return $tags;
     }
 
-    public function getConfig(InputInterface $input)
+    public function getConfig($tags, InputInterface $input)
     {
         $config = array();
         foreach ($this->plugins as $plugin) {
             /** @var $pluginObject Plugin */
             $pluginObject = $this->getPluginObject($plugin);
-            $config = $pluginObject->getConfig($config, $input);
+            $config = $pluginObject->getConfig($config, $tags, $input);
         }
 
         return $config;
@@ -59,7 +59,11 @@ class Package
         $sources = array();
         foreach ($this->plugins as $plugin) {
             $pluginObject = $this->getPluginObject($plugin);
-            $sources[] = $pluginObject->getPath('Templates');
+
+            $path = $pluginObject->getPath('Templates');
+            if($path !== false) {
+                $sources[] = $path;
+            }
         }
 
         return $sources;

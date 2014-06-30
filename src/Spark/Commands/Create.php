@@ -53,7 +53,7 @@ EOT;
         $templateSources = $package->getTemplateSources();
         $templatePermissions = $package->getPermissions();
         $tags = $package->setTags($tags, $input);
-        $config = $package->getConfig($input);
+        $config = $package->getConfig($tags, $input);
 
         $builder = new Builder($dir);
         $builder->setSources(

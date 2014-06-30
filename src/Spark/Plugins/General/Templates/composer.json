@@ -3,9 +3,12 @@
     "description": "",
     "homepage": "http://github.com/{{ vendor }}/{{ name }}",
     "type": "library",
-    "license": "{{ license }}",
+    "license": "",
+    "authors": [],
     "require": {
         "php": ">=5.3.0"
+    },
+    "require-dev": {
     },
     "autoload": {
         "psr-0": {"{{ name }}": "{{ source_dir }}/"}

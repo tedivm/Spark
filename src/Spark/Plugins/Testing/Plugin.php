@@ -17,7 +17,7 @@ class Plugin extends Base
 
     protected $config = array(
         'composer.json' =>
-            array('required-dev' =>
+            array('require-dev' =>
                 array(
                     "phpunit/phpunit" => "4.0.*",
                     "fabpot/php-cs-fixer"=> "0.4.0",
