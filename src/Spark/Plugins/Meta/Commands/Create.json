@@ -19,7 +19,8 @@
             "shortcut":"t",
             "input":true,
             "description":"One line description of the project.",
-            "default":null
+            "default":null,
+            "saveable":false
         },
         {
             "name":"email",
