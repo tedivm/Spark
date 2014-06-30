@@ -175,11 +175,11 @@ abstract class Plugin
 
     protected function addToConfig($file, $values, $replace = false)
     {
-        if(!isset($this->config) || !is_array($this->config)) {
+        if (!isset($this->config) || !is_array($this->config)) {
             $this->config = array();
         }
 
-        if(isset($this->config[$file]) && $replace !== true) {
+        if (isset($this->config[$file]) && $replace !== true) {
             $this->config[$file] = array_merge($this->config[$file], $values);
         } else {
             $this->config[$file] = $values;

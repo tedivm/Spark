@@ -5,7 +5,6 @@ namespace Spark\Plugins\Meta;
 use Spark\Plugins\Core\Plugin as Base;
 use Symfony\Component\Console\Input\InputInterface;
 
-
 class Plugin extends Base
 {
     public function setTags(&$tags, InputInterface $input)

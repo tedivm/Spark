@@ -61,7 +61,7 @@ class Package
             $pluginObject = $this->getPluginObject($plugin);
 
             $path = $pluginObject->getPath('Templates');
-            if($path !== false) {
+            if ($path !== false) {
                 $sources[] = $path;
             }
         }

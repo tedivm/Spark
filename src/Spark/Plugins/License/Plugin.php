@@ -79,7 +79,6 @@ class Plugin extends Base
             $config['composer.json']['license'] = $license;
         }
 
-
         return $config;
     }
 

@@ -15,19 +15,19 @@ class Plugin extends Base
     {
         $authorArray = array();
 
-        if($author = $input->getOption('author')) {
+        if ($author = $input->getOption('author')) {
             $authorArray['name'] = $author;
         }
 
-        if($email = $input->getOption('email')) {
+        if ($email = $input->getOption('email')) {
             $authorArray['email'] = $email;
         }
 
-        if(count($authorArray) > 0) {
+        if (count($authorArray) > 0) {
             $this->addToConfig('composer.json', array('authors' => array($authorArray)));
         }
 
-        if(isset($tags['tagline'])) {
+        if (isset($tags['tagline'])) {
             $this->config['composer.json']['description'] = $tags['tagline'];
         }
 
