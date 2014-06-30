@@ -100,6 +100,7 @@ class Package
             unset($config['extends']);
             $config = array_merge_recursive($packagesConfig[$extends], $config);
         }
+        array_unshift($config['plugins'], 'Meta');
 
         return $config;
     }
