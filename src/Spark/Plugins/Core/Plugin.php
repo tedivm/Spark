@@ -18,6 +18,8 @@ abstract class Plugin
     protected $permissions = array();
     protected $config = array();
 
+    protected $tags = array();
+
     public function __construct()
     {
         $className = get_class($this);
@@ -130,7 +132,31 @@ abstract class Plugin
 
     public function setTags(&$tags, InputInterface $input)
     {
+        if (!isset($this->tags) || !is_array($this->tags) || !count($this->tags) > 0) {
+            return;
+        }
 
+        $options = $this->getCommandOptions('Create');
+
+        foreach ($options as $option) {
+            if (isset($option['name'])) {
+                $myTags = $options['name'];
+            }
+        }
+
+        foreach ($this->tags as $name => $value) {
+
+            $inputValue = null;
+            if ($input->hasOption($name)) {
+                $inputValue = $input->getOption($name);
+            }
+
+            if (is_null($inputValue)) {
+                $tags[$name] = $value;
+            } elseif (isset($myTags) && in_array($name, $myTags)) {
+                $tags[$name] = $value;
+            }
+        }
     }
 
     public function setConfig(&$config, InputInterface $input)
