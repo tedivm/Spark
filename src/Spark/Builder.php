@@ -94,7 +94,6 @@ class Builder
 
         $templates = array();
         foreach ($this->config as $file => $rawContents) {
-
             $ext = pathinfo($file, PATHINFO_EXTENSION);
 
             if ($ext == 'dist') {

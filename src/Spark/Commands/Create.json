@@ -18,7 +18,7 @@
             "name":"author",
             "shortcut":"a",
             "input":true,
-            "description":"Author of project (formatted: FirstName LastName <email@domain.tld>).",
+            "description":"Author of project (formatted: FirstName LastName).",
             "default":null
         }
     ],
@@ -31,7 +31,7 @@
         {
             "name":"type",
             "description":"What type of project is being built.",
-            "default":"general"
+            "default":"library"
         }
     ]
 }

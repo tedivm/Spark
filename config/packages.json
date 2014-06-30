@@ -2,14 +2,20 @@
     "general":{
         "plugins":[
             "General",
-            "License",
-            "Testing"
+            "License"
         ]
     },
     "cli":{
         "extends":"general",
         "plugins":[
+            "Testing",
             "CLI"
+        ]
+    },
+    "library":{
+        "extends":"general",
+        "plugins":[
+            "Testing"
         ]
     }
 }
