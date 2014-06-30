@@ -4,6 +4,8 @@ namespace Spark;
 
 use Symfony\Component\Console\Input\InputInterface;
 
+use Spark\Plugins\Core\Plugin;
+
 class Package
 {
     protected $plugins = array();
@@ -32,8 +34,9 @@ class Package
     {
         $config = array();
         foreach ($this->plugins as $plugin) {
+            /** @var $pluginObject Plugin */
             $pluginObject = $this->getPluginObject($plugin);
-            $pluginObject->setConfig($config, $input);
+            $config = $pluginObject->getConfig($config, $input);
         }
 
         return $config;
@@ -95,7 +98,7 @@ class Package
         while (isset($config['extends'])) {
             $extends = $config['extends'];
             unset($config['extends']);
-            $config = array_merge_recursive($config, $packagesConfig[$extends]);
+            $config = array_merge_recursive($packagesConfig[$extends], $config);
         }
 
         return $config;

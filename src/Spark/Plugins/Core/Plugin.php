@@ -114,13 +114,22 @@ abstract class Plugin
 
                 switch ($extension) {
                     case 'json':
-                        $this->config[$shortPath] = json_decode(file_get_contents($longPath), true);
+                        $configContent = json_decode(file_get_contents($longPath), true);
                         break;
 
                     case 'yml':
-                        $this->config[$shortPath] = Yaml::parse(file_get_contents($longPath));
+                        $configContent = Yaml::parse(file_get_contents($longPath));
                         break;
 
+                }
+
+                if (isset($configContent)) {
+                    if (isset($this->config[$shortPath])) {
+                        $this->config[$shortPath] = array_merge_recursive($this->config[$shortPath], $configContent);
+                    } else {
+                        $this->config[$shortPath] = $configContent;
+                    }
+                    unset($configContent);
                 }
 
                 $output['files'][] = $shortPath;
@@ -159,9 +168,9 @@ abstract class Plugin
         }
     }
 
-    public function setConfig(&$config, InputInterface $input)
+    public function getConfig($config, InputInterface $input)
     {
-        $config = array_merge_recursive($config, $this->config);
+        return array_merge_recursive($config, $this->config);
     }
 
 }
