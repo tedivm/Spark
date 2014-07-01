@@ -12,7 +12,7 @@ before_script:
     - composer self-update && composer install --dev
     - tests/travis/php_setup.sh
 
-script: ./tests/runTests.sh
+script: ./{{ test_dir }}/runTests.sh
 
 after_script:
     - php vendor/bin/coveralls -v

@@ -63,4 +63,23 @@ class Plugin extends Base
             $tags['license'] = $license;
         }
     }
+
+    public function getConfig($config, $tags, InputInterface $input)
+    {
+        $config = parent::getConfig($config, $tags, $input);
+
+        $license = $tags['license'];
+
+        if (isset($tags['license']) && $tags['license'] !== 'none') {
+            if (isset($this->licenseAliases[$license])) {
+                $license = $this->licenseAliases[$tags['license']];
+            } else {
+                $license = $tags['license'];
+            }
+            $config['composer.json']['license'] = $license;
+        }
+
+        return $config;
+    }
+
 }

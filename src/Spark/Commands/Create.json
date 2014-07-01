@@ -6,20 +6,6 @@
             "input":true,
             "description":"Directory the project will be created in.",
             "default":null
-        },
-        {
-            "name":"vendor",
-            "shortcut":"u",
-            "input":true,
-            "description":"Vendor name of project (usually your GitHub username).",
-            "default":null
-        },
-        {
-            "name":"author",
-            "shortcut":"a",
-            "input":true,
-            "description":"Author of project (formatted: FirstName LastName <email@domain.tld>).",
-            "default":null
         }
     ],
     "arguments":[
@@ -31,7 +17,7 @@
         {
             "name":"type",
             "description":"What type of project is being built.",
-            "default":"general"
+            "default":"library"
         }
     ]
 }

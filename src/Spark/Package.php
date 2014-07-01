@@ -4,15 +4,19 @@ namespace Spark;
 
 use Symfony\Component\Console\Input\InputInterface;
 
+use Spark\Plugins\Core\Plugin;
+
 class Package
 {
+    protected $name;
     protected $plugins = array();
     protected $pluginObjects = array();
 
     public function __construct($packageName)
     {
-        $config = $this->getPackageConfig($packageName);
-        $this->plugins = $config['plugins'];
+        $this->name = $packageName;
+        $packageInfo = new PackageInfo($this->name);
+        $this->plugins = $packageInfo->getPlugins();
         foreach ($this->plugins as $plugin) {
            $this->pluginObjects[$plugin] = PluginManager::getPluginObject($plugin);
         }
@@ -28,12 +32,13 @@ class Package
         return $tags;
     }
 
-    public function getConfig(InputInterface $input)
+    public function getConfig($tags, InputInterface $input)
     {
         $config = array();
         foreach ($this->plugins as $plugin) {
+            /** @var $pluginObject Plugin */
             $pluginObject = $this->getPluginObject($plugin);
-            $pluginObject->setConfig($config, $input);
+            $config = $pluginObject->getConfig($config, $tags, $input);
         }
 
         return $config;
@@ -56,7 +61,11 @@ class Package
         $sources = array();
         foreach ($this->plugins as $plugin) {
             $pluginObject = $this->getPluginObject($plugin);
-            $sources[] = $pluginObject->getPath('Templates');
+
+            $path = $pluginObject->getPath('Templates');
+            if ($path !== false) {
+                $sources[] = $path;
+            }
         }
 
         return $sources;
@@ -76,28 +85,5 @@ class Package
     protected function getPluginObject($plugin)
     {
         return $this->pluginObjects[$plugin];
-    }
-
-    protected function getPackageConfig($package)
-    {
-        $resources = new Resources();
-        $configPath = $resources->getPath('config');
-
-        $packagesConfig = json_decode(file_get_contents($configPath . 'packages.json'), true);
-
-        if (!isset($packagesConfig[$package])) {
-            throw new \RuntimeException($package . ' is not a supported type.');
-        }
-
-        $config = $packagesConfig[$package];
-
-        // Loop through parent packages and merge their config in.
-        while (isset($config['extends'])) {
-            $extends = $config['extends'];
-            unset($config['extends']);
-            $config = array_merge_recursive($config, $packagesConfig[$extends]);
-        }
-
-        return $config;
     }
 }

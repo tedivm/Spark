@@ -44,24 +44,8 @@ EOT;
             $dir = getcwd() . '/' . $name . '/';
         }
 
-        if ($input->getOption('vendor')) {
-            $vendor = $input->getOption('vendor');
-        } else {
-            $vendor = 'VENDOR';
-        }
-
-        if ($input->getOption('author')) {
-            $author = $input->getOption('author');
-        } elseif ($vendor != 'VENDOR') {
-            $author = $vendor;
-        } else {
-            $author = 'author';
-        }
-
         $tags = array(
-            'name' => $name,
-            'vendor' => $vendor,
-            'author' => $author
+            'name' => $name
         );
 
         $package = new Package($type);
@@ -69,7 +53,7 @@ EOT;
         $templateSources = $package->getTemplateSources();
         $templatePermissions = $package->getPermissions();
         $tags = $package->setTags($tags, $input);
-        $config = $package->getConfig($input);
+        $config = $package->getConfig($tags, $input);
 
         $builder = new Builder($dir);
         $builder->setSources(

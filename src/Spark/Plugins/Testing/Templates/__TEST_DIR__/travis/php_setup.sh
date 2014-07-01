@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/usr/bin/env sh
 set -e
 
 
@@ -20,6 +19,6 @@ else
     echo "*********************"
     echo ""
     echo ""
-    phpenv config-add tests/travis/php_extensions.ini
+    phpenv config-add {{ test_dir }}/travis/php_extensions.ini
 
 fi

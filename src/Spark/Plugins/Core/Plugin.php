@@ -18,6 +18,8 @@ abstract class Plugin
     protected $permissions = array();
     protected $config = array();
 
+    protected $tags = array();
+
     public function __construct()
     {
         $className = get_class($this);
@@ -29,6 +31,20 @@ abstract class Plugin
         $this->directory = $resources->getPath('plugins') . $this->name . '/';
 
         $this->loadTemplateFiles();
+    }
+
+    public function getDescription()
+    {
+        $config = array();
+        if (file_exists($this->directory . 'Plugin.json')) {
+            $config = json_decode(file_get_contents($this->directory . 'Plugin.json'), true);
+        }
+
+        if (!isset($config['name'])) {
+            $config['name'] = $this->name;
+        }
+
+        return $config;
     }
 
     public function getCommandOptions($command)
@@ -112,13 +128,22 @@ abstract class Plugin
 
                 switch ($extension) {
                     case 'json':
-                        $this->config[$shortPath] = json_decode(file_get_contents($longPath), true);
+                        $configContent = json_decode(file_get_contents($longPath), true);
                         break;
 
                     case 'yml':
-                        $this->config[$shortPath] = Yaml::parse(file_get_contents($longPath));
+                        $configContent = Yaml::parse(file_get_contents($longPath));
                         break;
 
+                }
+
+                if (isset($configContent)) {
+                    if (isset($this->config[$shortPath])) {
+                        $this->config[$shortPath] = array_merge_recursive($this->config[$shortPath], $configContent);
+                    } else {
+                        $this->config[$shortPath] = $configContent;
+                    }
+                    unset($configContent);
                 }
 
                 $output['files'][] = $shortPath;
@@ -130,12 +155,49 @@ abstract class Plugin
 
     public function setTags(&$tags, InputInterface $input)
     {
+        if (!isset($this->tags) || !is_array($this->tags) || !count($this->tags) > 0) {
+            return;
+        }
 
+        $options = $this->getCommandOptions('Create');
+
+        foreach ($options as $option) {
+            if (isset($option['name'])) {
+                $myTags = $options['name'];
+            }
+        }
+
+        foreach ($this->tags as $name => $value) {
+
+            $inputValue = null;
+            if ($input->hasOption($name)) {
+                $inputValue = $input->getOption($name);
+            }
+
+            if (is_null($inputValue)) {
+                $tags[$name] = $value;
+            } elseif (isset($myTags) && in_array($name, $myTags)) {
+                $tags[$name] = $value;
+            }
+        }
     }
 
-    public function setConfig(&$config, InputInterface $input)
+    public function getConfig($config, $tags, InputInterface $input)
     {
-        $config = array_merge_recursive($config, $this->config);
+        return array_merge_recursive($config, $this->config);
+    }
+
+    protected function addToConfig($file, $values, $replace = false)
+    {
+        if (!isset($this->config) || !is_array($this->config)) {
+            $this->config = array();
+        }
+
+        if (isset($this->config[$file]) && $replace !== true) {
+            $this->config[$file] = array_merge($this->config[$file], $values);
+        } else {
+            $this->config[$file] = $values;
+        }
     }
 
 }

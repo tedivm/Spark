@@ -33,6 +33,11 @@ EOT;
         'no-interaction',
     );
 
+    protected $removeOptions = array(
+        'dir',
+        'tagline'
+    );
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $_SERVER['HOME'] . '/.spark.json';
@@ -58,6 +63,7 @@ EOT;
             if (!in_array($name, $this->ignoreOptions) && !is_null($value) && $value !== '') {
                 $options[$name] = $value;
             }
+
         }
 
         $jsonSettings = 0;
@@ -80,7 +86,7 @@ EOT;
 
         $createOptionsConfigs = array();
         foreach ($createOptionsConfigsUnfiltered as $options) {
-            if ($options[0] != 'dir') {
+            if (!in_array($options[0], $this->removeOptions)) {
                 $createOptionsConfigs[] = $options;
             }
         }
