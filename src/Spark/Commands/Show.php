@@ -75,10 +75,9 @@ EOT;
         $name = $input->getArgument('name');
         $packageInfo = new PackageInfo($name);
 
-
         $output->writeln($packageInfo->getName());
 
-        if($description = $packageInfo->getDescription()) {
+        if ($description = $packageInfo->getDescription()) {
             $output->writeln($description);
         }
 
@@ -120,7 +119,7 @@ EOT;
         $config = $plugin->getDescription();
         $output->writeln($name);
 
-        if(isset($config['description'])) {
+        if (isset($config['description'])) {
             $output->writeln($config['description']);
         }
     }
