@@ -1,0 +1,14 @@
+{
+    "options":[],
+    "arguments":[
+        {
+            "name":"type",
+            "description":"The part of the application to show- packages or plugins.",
+            "default":"package"
+        },
+        {
+            "name":"name",
+            "description":"A specific resource to go into more details about."
+        }
+    ]
+}
