@@ -1,6 +1,6 @@
 {
     "general":{
-        "description": "Adds metadocumentation and licensing.",
+        "description": "Creates a project with just documentation and metadocs.",
         "plugins":[
             "General",
             "License"
@@ -15,7 +15,7 @@
         ]
     },
     "library":{
-        "description": "Creates structure for a basic library.",
+        "description": "Creates structure for a basic library with testing.",
         "extends":"general",
         "plugins":[
             "Testing"
