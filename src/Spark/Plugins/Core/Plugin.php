@@ -33,6 +33,20 @@ abstract class Plugin
         $this->loadTemplateFiles();
     }
 
+    public function getDescription()
+    {
+        $config = array();
+        if (file_exists($this->directory . 'Plugin.json')) {
+            $config = json_decode(file_get_contents($this->directory . 'Plugin.json'), true);
+        }
+
+        if (!isset($config['name'])) {
+            $config['name'] = $this->name;
+        }
+
+        return $config;
+    }
+
     public function getCommandOptions($command)
     {
         $path = $this->getPath('Commands');

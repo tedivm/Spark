@@ -1,11 +1,13 @@
 {
     "general":{
+        "description": "Adds metadocumentation and licensing.",
         "plugins":[
             "General",
             "License"
         ]
     },
     "cli":{
+        "description": "Creates structure for a basic shell application.",
         "extends":"general",
         "plugins":[
             "Testing",
@@ -13,6 +15,7 @@
         ]
     },
     "library":{
+        "description": "Creates structure for a basic library.",
         "extends":"general",
         "plugins":[
             "Testing"

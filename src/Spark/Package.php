@@ -8,13 +8,15 @@ use Spark\Plugins\Core\Plugin;
 
 class Package
 {
+    protected $name;
     protected $plugins = array();
     protected $pluginObjects = array();
 
     public function __construct($packageName)
     {
-        $config = $this->getPackageConfig($packageName);
-        $this->plugins = $config['plugins'];
+        $this->name = $packageName;
+        $packageInfo = new PackageInfo($this->name);
+        $this->plugins = $packageInfo->getPlugins();
         foreach ($this->plugins as $plugin) {
            $this->pluginObjects[$plugin] = PluginManager::getPluginObject($plugin);
         }
@@ -83,29 +85,5 @@ class Package
     protected function getPluginObject($plugin)
     {
         return $this->pluginObjects[$plugin];
-    }
-
-    protected function getPackageConfig($package)
-    {
-        $resources = new Resources();
-        $configPath = $resources->getPath('config');
-
-        $packagesConfig = json_decode(file_get_contents($configPath . 'packages.json'), true);
-
-        if (!isset($packagesConfig[$package])) {
-            throw new \RuntimeException($package . ' is not a supported type.');
-        }
-
-        $config = $packagesConfig[$package];
-
-        // Loop through parent packages and merge their config in.
-        while (isset($config['extends'])) {
-            $extends = $config['extends'];
-            unset($config['extends']);
-            $config = array_merge_recursive($packagesConfig[$extends], $config);
-        }
-        array_unshift($config['plugins'], 'Meta');
-
-        return $config;
     }
 }
